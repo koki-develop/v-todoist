@@ -1,7 +1,6 @@
 module rest
 
 import json
-import net.http
 
 pub enum ProjectViewStyle {
 	list
