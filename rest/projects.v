@@ -82,3 +82,11 @@ pub fn (c Client) update_project(id string, params UpdateProjectParams) !Project
 	project := json.decode(Project, resp.body)!
 	return project
 }
+
+pub fn (c Client) delete_project(id string) ! {
+	req := c.new_request(.delete, '/v2/projects/${id}', '')
+	resp := req.do()!
+	if resp.status() != .no_content {
+		return error(resp.body)
+	}
+}
