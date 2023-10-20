@@ -36,3 +36,27 @@ pub fn (c Client) get_projects() ![]Project {
 	projects := json.decode([]Project, resp.body)!
 	return projects
 }
+
+[params]
+pub struct CreateProjectParams {
+	name        string            [json: 'name'; required]
+	parent_id   ?string           [json: 'parentId']
+	color       ?string           [json: 'color']
+	is_favorite ?bool             [json: 'is_favorite']
+	view_style  ?ProjectViewStyle [json: 'view_style']
+}
+
+pub fn (c Client) create_project(params CreateProjectParams) !Project {
+	url := 'https://api.todoist.com/rest/v2/projects'
+	mut req := http.new_request(http.Method.post, url, json.encode(params))
+	req.add_header(http.CommonHeader.authorization, 'Bearer ${c.token}')
+	req.add_header(http.CommonHeader.content_type, 'application/json')
+
+	resp := req.do()!
+	if resp.status() != http.Status.ok {
+		return error(resp.body)
+	}
+
+	project := json.decode(Project, resp.body)!
+	return project
+}
