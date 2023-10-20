@@ -24,7 +24,7 @@ pub struct Project {
 
 pub fn (c Client) get_projects() ![]Project {
 	req := c.new_request(.get, '/v2/projects', '')
-	resp := req.do()!
+	resp := c.http_client.do(req)!
 	if resp.status() != .ok {
 		return error(resp.body)
 	}
