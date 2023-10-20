@@ -20,11 +20,11 @@ pub fn new(token string) Client {
 fn (c Client) new_request(method http.Method, pathname string, data string) http.Request {
 	url := rest.base_url + pathname
 	mut req := http.new_request(method, url, data)
-	req.add_header(http.CommonHeader.authorization, 'Bearer ${c.token}')
+	req.add_header(.authorization, 'Bearer ${c.token}')
 
 	match method {
 		.post {
-			req.add_header(http.CommonHeader.content_type, 'application/json')
+			req.add_header(.content_type, 'application/json')
 		}
 		else {}
 	}
