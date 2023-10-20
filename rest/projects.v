@@ -24,10 +24,7 @@ pub struct Project {
 }
 
 pub fn (c Client) get_projects() ![]Project {
-	url := 'https://api.todoist.com/rest/v2/projects'
-	mut req := http.new_request(http.Method.get, url, '')
-	req.add_header(http.CommonHeader.authorization, 'Bearer ${c.token}')
-
+	req := c.new_request(http.Method.get, '/v2/projects', '')
 	resp := req.do()!
 	if resp.status() != http.Status.ok {
 		return error(resp.body)
@@ -47,11 +44,7 @@ pub struct CreateProjectParams {
 }
 
 pub fn (c Client) create_project(params CreateProjectParams) !Project {
-	url := 'https://api.todoist.com/rest/v2/projects'
-	mut req := http.new_request(http.Method.post, url, json.encode(params))
-	req.add_header(http.CommonHeader.authorization, 'Bearer ${c.token}')
-	req.add_header(http.CommonHeader.content_type, 'application/json')
-
+	req := c.new_request(http.Method.post, '/v2/projects', json.encode(params))
 	resp := req.do()!
 	if resp.status() != http.Status.ok {
 		return error(resp.body)
