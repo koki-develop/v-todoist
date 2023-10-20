@@ -34,6 +34,17 @@ pub fn (c Client) get_projects() ![]Project {
 	return projects
 }
 
+pub fn (c Client) get_project(id string) !Project {
+	req := c.new_request(.get, '/v2/projects/' + id, '')
+	resp := req.do()!
+	if resp.status() != http.Status.ok {
+		return error(resp.body)
+	}
+
+	project := json.decode(Project, resp.body)!
+	return project
+}
+
 [params]
 pub struct CreateProjectParams {
 	name        string            [json: 'name'; required]
