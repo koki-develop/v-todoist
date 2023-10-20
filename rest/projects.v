@@ -64,3 +64,22 @@ pub fn (c Client) create_project(params CreateProjectParams) !Project {
 	project := json.decode(Project, resp.body)!
 	return project
 }
+
+[params]
+pub struct UpdateProjectParams {
+	name        ?string           [json: 'name']
+	color       ?string           [json: 'color']
+	is_favorite ?bool             [json: 'is_favorite']
+	view_style  ?ProjectViewStyle [json: 'view_style']
+}
+
+pub fn (c Client) update_project(id string, params UpdateProjectParams) !Project {
+	req := c.new_request(.post, '/v2/projects/' + id, json.encode(params))
+	resp := req.do()!
+	if resp.status() != http.Status.ok {
+		return error(resp.body)
+	}
+
+	project := json.decode(Project, resp.body)!
+	return project
+}
