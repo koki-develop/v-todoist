@@ -24,7 +24,7 @@ pub struct Project {
 }
 
 pub fn (c Client) get_projects() ![]Project {
-	req := c.new_request(http.Method.get, '/v2/projects', '')
+	req := c.new_request(.get, '/v2/projects', '')
 	resp := req.do()!
 	if resp.status() != http.Status.ok {
 		return error(resp.body)
@@ -55,7 +55,7 @@ pub struct CreateProjectParams {
 }
 
 pub fn (c Client) create_project(params CreateProjectParams) !Project {
-	req := c.new_request(http.Method.post, '/v2/projects', json.encode(params))
+	req := c.new_request(.post, '/v2/projects', json.encode(params))
 	resp := req.do()!
 	if resp.status() != http.Status.ok {
 		return error(resp.body)
