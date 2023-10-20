@@ -13,6 +13,7 @@ mut:
 	http_client IHttpClient // for testing
 }
 
+// new returns a new Client with the given token.
 pub fn new(token string) Client {
 	return Client{
 		token: token
