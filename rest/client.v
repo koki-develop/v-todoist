@@ -9,17 +9,24 @@ const (
 pub struct Client {
 pub mut:
 	token string [required]
+mut:
+	http_client IHttpClient // for testing
 }
 
 pub fn new(token string) Client {
 	return Client{
 		token: token
+		http_client: HttpClient{}
 	}
 }
 
 fn (c Client) new_request(method http.Method, pathname string, data string) http.Request {
 	url := rest.base_url + pathname
-	mut req := http.new_request(method, url, data)
+	mut req := http.Request{
+		method: method
+		url: url
+		data: data
+	}
 	req.add_header(.authorization, 'Bearer ${c.token}')
 
 	match method {
