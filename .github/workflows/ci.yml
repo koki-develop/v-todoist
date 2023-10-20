@@ -17,5 +17,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: vlang/setup-v@v1.3
-      - name: Test
+      - name: Vet
         run: v vet -W .
