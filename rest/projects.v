@@ -61,7 +61,7 @@ pub struct CreateProjectParams {
 // See https://developer.todoist.com/rest/v2/#create-a-new-project for details.
 pub fn (c Client) create_project(params CreateProjectParams) !Project {
 	req := c.new_request(.post, '/v2/projects', json.encode(params))
-	resp := req.do()!
+	resp := c.http_client.do(req)!
 	if resp.status() != .ok {
 		return error(resp.body)
 	}
