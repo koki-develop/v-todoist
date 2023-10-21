@@ -82,7 +82,7 @@ pub struct UpdateProjectParams {
 // See https://developer.todoist.com/rest/v2/#update-a-project for details.
 pub fn (c Client) update_project(id string, params UpdateProjectParams) !Project {
 	req := c.new_request(.post, '/v2/projects/${id}', json.encode(params))
-	resp := req.do()!
+	resp := c.http_client.do(req)!
 	if resp.status() != .ok {
 		return error(resp.body)
 	}
