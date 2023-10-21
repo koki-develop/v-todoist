@@ -95,7 +95,7 @@ pub fn (c Client) update_project(id string, params UpdateProjectParams) !Project
 // See https://developer.todoist.com/rest/v2/#delete-a-project for details.
 pub fn (c Client) delete_project(id string) ! {
 	req := c.new_request(.delete, '/v2/projects/${id}', '')
-	resp := req.do()!
+	resp := c.http_client.do(req)!
 	if resp.status() != .no_content {
 		return error(resp.body)
 	}
