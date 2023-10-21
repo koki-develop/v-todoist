@@ -39,7 +39,7 @@ pub fn (c Client) get_projects() ![]Project {
 // See https://developer.todoist.com/rest/v2/#get-a-project for details.
 pub fn (c Client) get_project(id string) !Project {
 	req := c.new_request(.get, '/v2/projects/${id}', '')
-	resp := req.do()!
+	resp := c.http_client.do(req)!
 	if resp.status() != .ok {
 		return error(resp.body)
 	}
