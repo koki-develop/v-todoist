@@ -24,14 +24,19 @@ pub fn new(token string) Client {
 fn (c Client) new_request(method http.Method, pathname string, data string) http.Request {
 	url := rest.base_url + pathname
 	mut req := http.Request{
-		method: method
 		url: url
-		data: data
+		method: method
 	}
 	req.add_header(.authorization, 'Bearer ${c.token}')
 
 	match method {
+		.get {
+			if data != '' {
+				req.url += '?${data}'
+			}
+		}
 		.post {
+			req.data = data
 			req.add_header(.content_type, 'application/json')
 		}
 		else {}
