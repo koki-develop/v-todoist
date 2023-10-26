@@ -3,6 +3,7 @@ module rest
 import json
 
 struct User {
+pub:
 	id    string [json: 'id']
 	name  string [json: 'name']
 	email string [json: 'email']

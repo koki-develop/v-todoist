@@ -8,6 +8,7 @@ pub enum ProjectViewStyle {
 }
 
 pub struct Project {
+pub:
 	id               string           [json: 'id']
 	name             string           [json: 'name']
 	color            string           [json: 'color']

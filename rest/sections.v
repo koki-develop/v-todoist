@@ -3,6 +3,7 @@ module rest
 import json
 
 struct Section {
+pub:
 	id         string [json: 'id']
 	project_id string [json: 'project_id']
 	order      int    [json: 'order']
