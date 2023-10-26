@@ -1,6 +1,7 @@
 module main
 
 import cli
+import math
 import os
 import rest
 
@@ -22,7 +23,7 @@ fn print_table(columns []string, rows [][]string) {
 		}
 
 		print(column)
-		print(' '.repeat(widthes[i] - column.len_utf8()))
+		print(' '.repeat(math.max(widthes[i] - column.len_utf8(), 0)))
 	}
 
 	print('\n')
@@ -34,7 +35,7 @@ fn print_table(columns []string, rows [][]string) {
 			}
 
 			print(column)
-			print(' '.repeat(widthes[i] - column.len_utf8()))
+			print(' '.repeat(math.max(widthes[i] - column.len_utf8(), 0)))
 		}
 
 		print('\n')
@@ -56,6 +57,14 @@ fn main() {
 						execute: fn [client] (_ cli.Command) ! {
 							projects := client.get_projects()!
 							print_table(['ID', 'NAME'], projects.map([it.id, it.name]))
+						}
+					},
+					cli.Command{
+						name: 'get'
+						required_args: 1
+						execute: fn [client] (command cli.Command) ! {
+							project := client.get_project(command.args[0])!
+							print_table(['ID', 'NAME'], [[project.id, project.name]])
 						}
 					},
 				]
