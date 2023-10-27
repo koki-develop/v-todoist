@@ -1,47 +1,8 @@
 module main
 
 import cli
-import math
 import os
 import rest
-
-fn print_table(columns []string, rows [][]string) {
-	mut widthes := []int{len: columns.len, init: 0}
-
-	for row in rows {
-		for i, column in row {
-			length := column.len_utf8()
-			if length > widthes[i] {
-				widthes[i] = length
-			}
-		}
-	}
-
-	for i, column in columns {
-		if i > 0 {
-			print(' ')
-		}
-
-		print(column)
-		print(' '.repeat(math.max(widthes[i] - column.len_utf8(), 0)))
-	}
-
-	print('\n')
-
-	for row in rows {
-		for i, column in row {
-			if i > 0 {
-				print(' ')
-			}
-
-			print(column)
-			print(' '.repeat(math.max(widthes[i] - column.len_utf8(), 0)))
-		}
-
-		print('\n')
-	}
-	flush_stdout()
-}
 
 fn main() {
 	client := rest.new(os.getenv('TODOIST_API_TOKEN'))
@@ -54,17 +15,37 @@ fn main() {
 				commands: [
 					cli.Command{
 						name: 'list'
-						execute: fn [client] (_ cli.Command) ! {
+						flags: [
+							cli.Flag{
+								name: 'columns'
+								flag: .string
+								default_value: [['id', 'name'].join(',')]
+							},
+						]
+						execute: fn [client] (command cli.Command) ! {
+							columns := command.flags.get_string('columns')!
 							projects := client.get_projects()!
-							print_table(['ID', 'NAME'], projects.map([it.id, it.name]))
+							table := projects_table(columns.split(','), projects)!
+							table.print()
 						}
 					},
 					cli.Command{
 						name: 'get'
+						flags: [
+							cli.Flag{
+								name: 'columns'
+								flag: .string
+								default_value: [['id', 'name'].join(',')]
+							},
+						]
 						required_args: 1
 						execute: fn [client] (command cli.Command) ! {
+							columns := command.flags.get_string('columns')!
 							project := client.get_project(command.args[0])!
-							print_table(['ID', 'NAME'], [[project.id, project.name]])
+							table := projects_table(columns.split(','), [
+								project,
+							])!
+							table.print()
 						}
 					},
 				]
